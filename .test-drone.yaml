@@ -1,0 +1,26 @@
+pipeline:
+  test1:
+    image: mrupgrade/drone-docker-image-promote
+    secrets: [ docker_username, docker_password ]
+    privileged: true
+
+    repository: mrupgrade/kta-webapp-flask
+    tag: latest
+
+    destination_tags:
+    - tag1
+    - tag2
+
+  test2:
+    image: mrupgrade/drone-docker-image-promote
+    secrets: [ docker_username, docker_password, destination_docker_username,  destination_docker_password ]
+    privileged: true
+
+    repository: mrupgrade/kta-webapp-gunicorn
+    tag: latest
+
+    destination_registry: quay.io
+    destination_repository: quay.io/mrupgrade/drone-docker-image-promote-test
+    destination_tags:
+    - tag1
+    - tag2

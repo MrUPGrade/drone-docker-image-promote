@@ -17,7 +17,6 @@ func main() {
 	app.Action = run
 	app.Version = version
 	app.Flags = []cli.Flag{
-
 		//
 		// repo args
 		//
@@ -191,6 +190,70 @@ func main() {
 			Usage:  "previous build sha",
 			EnvVar: "DRONE_PREV_COMMIT_SHA",
 		},
+
+		//
+		// plugin args
+		//
+
+		cli.BoolFlag{
+			Name:   "plugin.debug",
+			Usage:  "debug plugin",
+			EnvVar: "PLUGIN_DEBUG",
+		},
+
+		// Source docker image
+		cli.StringFlag{
+			Name:   "source.docker.username",
+			Usage:  "docker username",
+			EnvVar: "DOCKER_USERNAME",
+		},
+		cli.StringFlag{
+			Name:   "source.docker.password",
+			Usage:  "docker password",
+			EnvVar: "DOCKER_PASSWORD",
+		},
+		cli.StringFlag{
+			Name:   "source.docker.registry",
+			Usage:  "docker registry",
+			EnvVar: "PLUGIN_REGISTRY",
+		},
+		cli.StringFlag{
+			Name:   "source.repository",
+			Usage:  "source repository",
+			EnvVar: "PLUGIN_REPOSITORY",
+		},
+		cli.StringFlag{
+			Name:   "source.tag",
+			Usage:  "source tag",
+			EnvVar: "PLUGIN_TAG",
+		},
+
+		// Destination docker image and tags
+		cli.StringFlag{
+			Name:   "destination.docker.username",
+			Usage:  "docker username",
+			EnvVar: "DESTINATION_DOCKER_USERNAME",
+		},
+		cli.StringFlag{
+			Name:   "destination.docker.password",
+			Usage:  "docker password",
+			EnvVar: "DESTINATION_DOCKER_PASSWORD",
+		},
+		cli.StringFlag{
+			Name:   "destination.docker.registry",
+			Usage:  "docker registry",
+			EnvVar: "PLUGIN_DESTINATION_REGISTRY",
+		},
+		cli.StringFlag{
+			Name:   "destination.repository",
+			Usage:  "destination repository",
+			EnvVar: "PLUGIN_DESTINATION_REPOSITORY",
+		},
+		cli.StringFlag{
+			Name:   "destination.tags",
+			Usage:  "list of tags",
+			EnvVar: "PLUGIN_DESTINATION_TAGS",
+		},
 	}
 
 	app.Run(os.Args)
@@ -231,7 +294,21 @@ func run(c *cli.Context) {
 			},
 		},
 		Config: Config{
-			// plugin-specific parameters
+			Debug:            c.Bool("plugin.debug"),
+			SourceRepository: c.String("source.repository"),
+			SourceTag:        c.String("source.tag"),
+			SourceRegistry: DockerRegistry{
+				Username: c.String("source.docker.username"),
+				Password: c.String("source.docker.password"),
+				Registry: c.String("source.docker.registry"),
+			},
+			DestinationRepository: c.String("destination.repository"),
+			DestinationTags:       c.String("destination.tags"),
+			DestinationRegistry: DockerRegistry{
+				Username: c.String("destination.docker.username"),
+				Password: c.String("destination.docker.password"),
+				Registry: c.String("destination.docker.registry"),
+			},
 		},
 	}
 
